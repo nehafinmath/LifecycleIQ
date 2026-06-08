@@ -212,31 +212,31 @@ Explore customer predictions.
 
 ## Executive Overview
 
-![Executive Overview](images/dashboard_overview.png)
+![Executive Overview](images/Executive Overview.png)
 
 ---
 
 ## Churn Risk Analysis
 
-![Churn Risk](images/churn_risk.png)
+![Churn Risk](images/Churn Risk.png)
 
 ---
 
 ## CLV Analysis
 
-![CLV Analysis](images/clv_analysis.png)
+![CLV Analysis](images/CLV Analysis.png)
 
 ---
 
 ## Next Best Action Engine
 
-![Next Best Action](images/next_best_action.png)
+![Next Best Action](images/Next Best Action.png)
 
 ---
 
 ## Campaign ROI Simulator
 
-![Campaign Simulator](images/campaign_simulator.png)
+![Campaign Simulator](images/Campaign Simulator.png)
 
 ---
 
