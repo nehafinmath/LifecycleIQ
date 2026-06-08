@@ -8,3 +8,4 @@ streamlit
 plotly
 joblib
 jupyter
+streamlit-option-menu
