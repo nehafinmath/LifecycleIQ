@@ -41,7 +41,18 @@ customer_features = (df.groupby("customer_unique_id").agg(
     avg_installments = ("payment_installments","mean")
 ).reset_index())
 
-customer_features["churn"] = (customer_features["recency"]>180).astype(int)
+customer_features["churn"] = ((
+        (customer_features["recency"] > 180)
+        & (customer_features["frequency"] <= 1)
+    )
+    | (
+        (customer_features["recency"] > 120)
+        & (customer_features["avg_review_score"] <= 3)
+    )
+    | (
+        (customer_features["recency"] > 120)
+        & (customer_features["avg_delivery_days"] > customer_features["avg_delivery_days"].median())
+    )).astype(int)
 customer_features = customer_features.fillna(0)
 
 customer_features.to_csv("data/processed/customer_features.csv",index=False)

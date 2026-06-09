@@ -110,16 +110,15 @@ Historical monetary value used as a CLV proxy.
 
 XGBoost Classifier
 
-### Features
+## Features
 
-* Recency
-* Frequency
-* Monetary value
-* Average order value
-* Review score
-* Delivery days
-* Total items purchased
-* Average installments
+- Churn Prediction using XGBoost
+- Customer Lifetime Value Prediction
+- Customer Segmentation using KMeans
+- Next Best Action Engine
+- Campaign ROI Simulator
+- Model Explainability
+- Interactive Streamlit Dashboard
 
 ### Output
 
@@ -165,37 +164,47 @@ Marketing actions:
 
 ---
 
+
 # Dashboard Screenshots
 
 ## Executive Overview
 
-![Executive Overview](images/executive_overview.png)
+<p align="center">
+  <img src="images/executive_overview.png" width="1000">
+</p>
 
 ---
 
-## Churn Risk Analysis
+## Customer Segmentation
 
-![Churn Risk](images/churn_risk.png)
+<p align="center">
+  <img src="images/customer_segmentation.png" width="1000">
+</p>
 
 ---
 
-## CLV Analysis
+## Model Explainability
 
-![CLV Analysis](images/clv_analysis.png)
+<p align="center">
+  <img src="images/model_explainability.png" width="1000">
+</p>
 
 ---
 
 ## Next Best Action Engine
 
-![Next Best Action](images/next_best_action.png)
+<p align="center">
+  <img src="images/next_best_action_engine.png" width="1000">
+</p>
 
 ---
 
 ## Campaign ROI Simulator
 
-![Campaign Simulator](images/campaign_simulator.png)
+<p align="center">
+  <img src="images/campaign_roi_simulator.png" width="1000">
+</p>
 
----
 
 # Dashboard Features
 

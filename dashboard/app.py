@@ -16,7 +16,7 @@ def load_data():
     return pd.read_csv("data/processed/customer_predictions.csv")
 
 
-df = load_data()
+df = pd.read_csv("data/processed/customer_segments.csv")
 
 df["risk_segment"] = pd.cut(
     df["churn_probability"],
@@ -38,6 +38,8 @@ with st.sidebar:
             "Overview",
             "Churn Risk",
             "CLV Analysis",
+            "Customer Segmentation",
+            "Model Explainability",
             "Next Best Action",
             "Campaign Simulator",
             "Customer Table"
@@ -46,6 +48,8 @@ with st.sidebar:
             "speedometer2",
             "exclamation-triangle",
             "cash-coin",
+            "people",
+            "search",
             "lightning-charge",
             "graph-up-arrow",
             "table"
@@ -217,6 +221,242 @@ elif selected == "CLV Analysis":
         use_container_width=True,
         hide_index=True
     )
+
+elif selected == "Customer Segmentation":
+
+    st.title("Customer Segmentation")
+    st.caption(
+        "Customer segments derived using RFM features and KMeans clustering."
+    )
+    k1, k2, k3, k4 = st.columns(4)
+
+    k1.metric(
+        "VIP",
+        f"{(df['customer_segment']=='VIP').sum():,}"
+    )
+    k2.metric(
+        "Loyal",
+        f"{(df['customer_segment']=='Loyal').sum():,}"
+    )
+
+    k3.metric(
+        "New",
+        f"{(df['customer_segment']=='New').sum():,}"
+    )
+
+    k4.metric(
+        "At Risk",
+        f"{(df['customer_segment']=='At Risk').sum():,}"
+    )
+
+    st.divider()
+
+    segment_counts = (
+        df["customer_segment"]
+        .value_counts()
+        .reset_index()
+    )
+
+    segment_counts.columns = ["Segment", "Customers"]
+    segment_order = ["VIP", "Loyal", "New", "At Risk"]
+
+    segment_counts["Segment"] = pd.Categorical(
+        segment_counts["Segment"],
+        categories=segment_order,
+        ordered=True
+    )
+
+    segment_counts = segment_counts.sort_values("Segment")
+
+    c1, c2 = st.columns(2)
+
+    with c1:
+        fig = px.bar(
+            segment_counts,
+            x="Customers",
+            y="Segment",
+            orientation="h",
+            color="Segment",
+            color_discrete_map={
+                "VIP": "#2ca02c",
+                "Loyal": "#1f77b4",
+                "New": "#ff7f0e",
+                "At Risk": "#d62728"
+        },
+            title="Customer Segment Distribution"
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+    with c2:
+
+        segment_summary = (
+            df.groupby("customer_segment")[
+                [
+                    "recency",
+                    "frequency",
+                    "monetary",
+                    "predicted_clv",
+                    "churn_probability"
+                ]
+            ]
+            .mean()
+            .round(2)
+        )
+
+        st.subheader("Segment Profiles")
+
+        st.dataframe(
+            segment_summary,
+            use_container_width=True
+        )
+
+    st.divider()
+
+    selected_segment = st.selectbox(
+        "Choose customer segment",
+        df["customer_segment"].unique()
+    )
+
+    filtered = df[
+        df["customer_segment"] == selected_segment
+    ]
+    c1, c2, c3, c4 = st.columns(4)
+
+    c1.metric(
+        "Customers",
+        f"{len(filtered):,}"
+    )
+    c2.metric(
+        "Avg CLV",
+        f"R$ {filtered['predicted_clv'].mean():,.2f}"
+    )
+
+    c3.metric(
+        "Avg Churn Risk",
+        f"{filtered['churn_probability'].mean():.1%}"
+    )
+
+    c4.metric(
+        "Avg Frequency",
+        f"{filtered['frequency'].mean():.2f}"
+    )
+
+    st.divider()
+
+    st.subheader(selected_segment)
+
+    st.dataframe(
+        filtered[
+            [
+                "customer_unique_id",
+                "customer_segment",
+                "predicted_clv",
+                "churn_probability",
+                "next_best_action"
+            ]
+        ].head(100),
+        use_container_width=True,
+        hide_index=True
+    )
+
+elif selected == "Model Explainability":
+
+    st.title("Model Explainability")
+    st.caption(
+        "Feature importance for churn prediction and customer lifetime value models."
+    )
+
+    importance_df = pd.read_csv(
+        "data/processed/model_feature_importance.csv"
+    )
+
+    c1, c2 = st.columns(2)
+
+    with c1:
+
+        st.subheader("Churn Model Drivers")
+
+        churn_df = (
+            importance_df[
+                importance_df["model"] == "Churn Model"
+            ]
+            .sort_values(
+                "importance",
+                ascending=True
+            )
+        )
+
+        fig = px.bar(
+            churn_df,
+            x="importance",
+            y="feature",
+            orientation="h",
+            title="Feature Importance",
+            color_discrete_sequence=["#1f77b4"]
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+    with c2:
+
+        st.subheader("CLV Model Drivers")
+
+        clv_df = (
+            importance_df[
+                importance_df["model"] == "CLV Model"
+            ]
+            .sort_values(
+                "importance",
+                ascending=True
+            )
+        )
+
+        fig = px.bar(
+            clv_df,
+            x="importance",
+            y="feature",
+            orientation="h",
+            title="Feature Importance",
+            color_discrete_sequence=["#1f77b4"]
+        )
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+    st.divider()
+
+    st.subheader("Business Interpretation")
+
+    st.markdown("""
+### Churn Model
+
+Customers are primarily driven by:
+
+- Recency
+- Frequency
+- Monetary value
+- Delivery experience
+
+### CLV Model
+
+Customer value is driven by:
+
+- Monetary spend
+- Average order value
+- Purchase frequency
+- Installment behavior
+
+These insights help marketing teams prioritize retention campaigns and maximize customer lifetime value.
+""")
 
 
 elif selected == "Next Best Action":

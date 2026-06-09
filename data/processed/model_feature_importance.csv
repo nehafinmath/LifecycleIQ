@@ -1,0 +1,17 @@
+feature,importance,model
+recency,0.7357717,Churn Model
+frequency,0.056014698,Churn Model
+monetary,0.00072899874,Churn Model
+avg_order_value,0.0006643255,Churn Model
+avg_review_score,0.06180177,Churn Model
+avg_delivery_days,0.1443269,Churn Model
+total_items,0.0,Churn Model
+avg_installments,0.0006915185,Churn Model
+recency,0.0299176,CLV Model
+frequency,0.0070493533,CLV Model
+monetary,0.7958505,CLV Model
+avg_order_value,0.041614015,CLV Model
+avg_review_score,0.05151673,CLV Model
+avg_delivery_days,0.036479495,CLV Model
+total_items,0.023213789,CLV Model
+avg_installments,0.014358524,CLV Model
